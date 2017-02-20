@@ -1,0 +1,16 @@
+CREATE TRIGGER tr_DeleteProductRelations ON Products INSTEAD OF DELETE
+AS
+BEGIN
+	DELETE FROM Feedbacks
+	WHERE ProductId IN (SELECT Id FROM deleted);
+
+	DELETE FROM ProductsIngredients
+	WHERE ProductId IN (SELECT Id FROM deleted);
+
+	DELETE FROM Products
+	WHERE Id IN (SELECT Id FROM deleted);
+END
+
+BEGIN TRANSACTION
+DELETE FROM Products WHERE Id = 7
+ROLLBACK
